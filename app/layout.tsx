@@ -12,9 +12,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  auth,
+  authenticated,
 }: {
   children: React.ReactNode;
+  auth: React.ReactNode;
+  authenticated: React.ReactNode;
 }) {
+  console.log({ auth, children, authenticated });
+
   return (
     <html lang='en' className='dark'>
       <body
