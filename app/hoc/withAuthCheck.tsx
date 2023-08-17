@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useAuth } from '../providers/AuthProvider';
+import { GetServerSideProps } from 'next';
 
 export type RouteType = 'public' | 'protected';
 
@@ -14,17 +15,24 @@ const withAuthCheck = <T extends {}>(
 
   const ComponentWithAuth = (props: T) => {
     const router = useRouter();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isAuthenticating, setIsAuthenticating } =
+      useAuth();
 
     useEffect(() => {
-      if (!isAuthenticated && routeType === 'protected') {
-        router.replace('/login');
-      } else if (isAuthenticated && routeType === 'public') {
-        router.replace('/dashboard');
+      if (!isAuthenticating) {
+        if (!isAuthenticated && routeType === 'protected') {
+          router.replace('/login');
+        } else if (isAuthenticated && routeType === 'public') {
+          router.replace('/dashboard');
+        }
       }
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, router, isAuthenticating]);
 
-    return <WrappedComponent {...(props as T)} />;
+    return isAuthenticating ? (
+      'loading...'
+    ) : (
+      <WrappedComponent {...(props as T)} />
+    );
   };
 
   return ComponentWithAuth;

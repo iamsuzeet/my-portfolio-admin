@@ -1,7 +1,10 @@
+'use client';
+
 import React from 'react';
+import withAuthCheck from './hoc/withAuthCheck';
 
 const page = () => {
   return <></>;
 };
 
-export default page;
+export default withAuthCheck(page);
